@@ -31,11 +31,11 @@ jobs:
           /usr/bin/codesign --verify --deep --strict 'output/mac-arm64/无名杀.app'
           file 'output/mac-arm64/无名杀.app/Contents/MacOS/无名杀'
           ln -s /Applications output/mac-arm64/Applications
-          hdiutil create -volname '无名杀 1.11.6' -srcfolder output/mac-arm64 -format UDZO -imagekey zlib-level=6 '无名杀-1.11.6-Mac-Apple芯片.dmg'
-          hdiutil verify '无名杀-1.11.6-Mac-Apple芯片.dmg'
-          shasum -a 256 '无名杀-1.11.6-Mac-Apple芯片.dmg' > SHA256SUMS.txt
+          hdiutil create -volname '无名杀 1.11.6' -srcfolder output/mac-arm64 -format UDZO -imagekey zlib-level=6 'noname-1.11.6-mac-arm64.dmg'
+          hdiutil verify 'noname-1.11.6-mac-arm64.dmg'
+          shasum -a 256 'noname-1.11.6-mac-arm64.dmg' > SHA256SUMS.txt
           git archive --format=tar.gz -o noname-mac-v1.11.6-source.tar.gz HEAD
       - name: Upload release assets
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload v1.11.6-mac.1 '无名杀-1.11.6-Mac-Apple芯片.dmg' SHA256SUMS.txt noname-mac-v1.11.6-source.tar.gz --clobber
+        run: gh release upload v1.11.6-mac.1 'noname-1.11.6-mac-arm64.dmg' SHA256SUMS.txt noname-mac-v1.11.6-source.tar.gz --clobber

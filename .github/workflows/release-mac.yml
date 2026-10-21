@@ -1,0 +1,41 @@
+name: Build macOS ARM64 release
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download and verify upstream assets
+        run: python3 prepare.py
+      - name: Install pinned build dependencies
+        working-directory: build
+        run: npm ci --ignore-scripts
+      - name: Compile desktop entry points
+        working-directory: build
+        run: |
+          npx esbuild src/main.ts --bundle --platform=node --format=esm --packages=external --outfile=app/main.js
+          npx esbuild src/preload.ts --bundle --platform=node --format=cjs --packages=external --outfile=app/preload.cjs
+      - name: Package Mac application
+        working-directory: build
+        run: npx electron-builder --mac --arm64 --dir
+      - name: Sign, verify and create installer
+        run: |
+          /usr/bin/codesign --force --deep --sign - 'output/mac-arm64/无名杀.app'
+          /usr/bin/codesign --verify --deep --strict 'output/mac-arm64/无名杀.app'
+          file 'output/mac-arm64/无名杀.app/Contents/MacOS/无名杀'
+          ln -s /Applications output/mac-arm64/Applications
+          hdiutil create -volname '无名杀 1.11.6' -srcfolder output/mac-arm64 -format UDZO -imagekey zlib-level=6 '无名杀-1.11.6-Mac-Apple芯片.dmg'
+          hdiutil verify '无名杀-1.11.6-Mac-Apple芯片.dmg'
+          shasum -a 256 '无名杀-1.11.6-Mac-Apple芯片.dmg' > SHA256SUMS.txt
+          git archive --format=tar.gz -o noname-mac-v1.11.6-source.tar.gz HEAD
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload v1.11.6-mac.1 '无名杀-1.11.6-Mac-Apple芯片.dmg' SHA256SUMS.txt noname-mac-v1.11.6-source.tar.gz --clobber

@@ -48,4 +48,4 @@ npx electron-builder --mac --arm64 --dir
 - [官方完整资源](https://github.com/libnoname/noname/releases/tag/v1.11.6)
 - [Electron](https://github.com/electron/electron/tree/v39.5.2)
 
-游戏及本仓库适配代码遵循 GPL-3.0-only，详见 LICENSE。Electron 与第三方依赖保留各自许可证。Release 同时提供上游对应源码和 Mac 适配源码存档；图片、音频等资源权利归各自权利人所有。
+游戏及本仓库适配代码遵循 GPL-3.0-only，详见 LICENSE。Electron 与第三方依赖保留各自许可证。Release 同时提供上游对应源码下载链接和 Mac 适配源码存档；图片、音频等资源权利归各自权利人所有。

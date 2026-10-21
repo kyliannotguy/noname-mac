@@ -1,0 +1,10 @@
+node_modules/
+game/
+electron-runtime/
+output/
+build/app/
+*.zip
+*.dmg
+.DS_Store
+__pycache__/
+*.pyc
